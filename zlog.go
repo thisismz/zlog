@@ -9,12 +9,11 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-var Zlog = new(_zap)
-
-type _zap struct {
+type Zlog struct {
 	// App config
 	config Config
 }
+
 type Config struct {
 	Level         string
 	Format        string
@@ -42,8 +41,8 @@ var (
 )
 
 // NewZlog configures Zlog
-func New(config ...Config) *_zap {
-	zlog := &_zap{
+func New(config ...Config) *Zlog {
+	zlog := &Zlog{
 		config: Config{},
 	}
 	// Override config if provided
@@ -76,12 +75,7 @@ func New(config ...Config) *_zap {
 	}
 	return zlog
 }
-func Log() (logger *zap.Logger) {
-	z := Zlog
-	logger = z.log()
-	return logger
-}
-func (zlog *_zap) log() (logger *zap.Logger) {
+func (zlog *Zlog) Log() *zap.Logger {
 	if ok, _ := pathExists(zlog.config.Director); !ok { // Determine if there is a Director folder
 		fmt.Printf("create %v directory\n", zlog.config.Director)
 		_ = os.Mkdir(zlog.config.Director, os.ModePerm)
@@ -109,7 +103,7 @@ func (zlog *_zap) log() (logger *zap.Logger) {
 		zlog.getEncoderCore(fmt.Sprintf("./%s/zlog_warn.log", zlog.config.Director), warnPriority),
 		zlog.getEncoderCore(fmt.Sprintf("./%s/zlog_error.log", zlog.config.Director), errorPriority),
 	}
-	logger = zap.New(zapcore.NewTee(cores[:]...), zap.AddCaller())
+	logger := zap.New(zapcore.NewTee(cores[:]...), zap.AddCaller())
 
 	if *zlog.config.ShowLine {
 		logger = logger.WithOptions(zap.AddCaller())
@@ -118,7 +112,7 @@ func (zlog *_zap) log() (logger *zap.Logger) {
 }
 
 // getEncoderConfig get zapcore. EncoderConfig
-func (zlog *_zap) getEncoderConfig() (config zapcore.EncoderConfig) {
+func (zlog *Zlog) getEncoderConfig() (config zapcore.EncoderConfig) {
 	config = zapcore.EncoderConfig{
 		MessageKey:     "message",
 		LevelKey:       "level",
@@ -128,7 +122,7 @@ func (zlog *_zap) getEncoderConfig() (config zapcore.EncoderConfig) {
 		StacktraceKey:  zlog.config.StacktraceKey,
 		LineEnding:     zapcore.DefaultLineEnding,
 		EncodeLevel:    zapcore.LowercaseLevelEncoder,
-		EncodeTime:     zlog.customTimeEncoder,
+		EncodeTime:     zlog.CustomTimeEncoder,
 		EncodeDuration: zapcore.StringDurationEncoder,
 		EncodeCaller:   zapcore.FullCallerEncoder, // Print the file name and the line which the error occurred
 	}
@@ -148,7 +142,7 @@ func (zlog *_zap) getEncoderConfig() (config zapcore.EncoderConfig) {
 }
 
 // getEncoder get zapcore. Encoder
-func (zlog *_zap) getEncoder() zapcore.Encoder {
+func (zlog *Zlog) getEncoder() zapcore.Encoder {
 	if zlog.config.Format == "json" {
 		return zapcore.NewJSONEncoder(zlog.getEncoderConfig())
 	}
@@ -156,12 +150,12 @@ func (zlog *_zap) getEncoder() zapcore.Encoder {
 }
 
 // getEncoderCore gets Encoder's zapcore.Core
-func (zlog *_zap) getEncoderCore(fileName string, level zapcore.LevelEnabler) (core zapcore.Core) {
+func (zlog *Zlog) getEncoderCore(fileName string, level zapcore.LevelEnabler) (core zapcore.Core) {
 	writer := GetWriteSyncer(fileName, *zlog.config.LogInConsole) // Use file-rotatelogs for log splitting
 	return zapcore.NewCore(zlog.getEncoder(), writer, level)
 }
 
 // Customize the log output time format
-func (zlog *_zap) customTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
+func (zlog *Zlog) CustomTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 	enc.AppendString(t.Format(zlog.config.Prefix + "2006/01/02 - 15:04:05.000"))
 }
