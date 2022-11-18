@@ -9,11 +9,12 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-type Zlog struct {
+var Zlog = new(_zap)
+
+type _zap struct {
 	// App config
 	config Config
 }
-
 type Config struct {
 	Level         string
 	Format        string
@@ -41,8 +42,8 @@ var (
 )
 
 // NewZlog configures Zlog
-func New(config ...Config) *Zlog {
-	zlog := &Zlog{
+func New(config ...Config) *_zap {
+	zlog := &_zap{
 		config: Config{},
 	}
 	// Override config if provided
@@ -75,7 +76,7 @@ func New(config ...Config) *Zlog {
 	}
 	return zlog
 }
-func (zlog *Zlog) Log() *zap.Logger {
+func (zlog *_zap) Log() *zap.Logger {
 	if ok, _ := pathExists(zlog.config.Director); !ok { // Determine if there is a Director folder
 		fmt.Printf("create %v directory\n", zlog.config.Director)
 		_ = os.Mkdir(zlog.config.Director, os.ModePerm)
@@ -112,7 +113,7 @@ func (zlog *Zlog) Log() *zap.Logger {
 }
 
 // getEncoderConfig get zapcore. EncoderConfig
-func (zlog *Zlog) getEncoderConfig() (config zapcore.EncoderConfig) {
+func (zlog *_zap) getEncoderConfig() (config zapcore.EncoderConfig) {
 	config = zapcore.EncoderConfig{
 		MessageKey:     "message",
 		LevelKey:       "level",
@@ -142,7 +143,7 @@ func (zlog *Zlog) getEncoderConfig() (config zapcore.EncoderConfig) {
 }
 
 // getEncoder get zapcore. Encoder
-func (zlog *Zlog) getEncoder() zapcore.Encoder {
+func (zlog *_zap) getEncoder() zapcore.Encoder {
 	if zlog.config.Format == "json" {
 		return zapcore.NewJSONEncoder(zlog.getEncoderConfig())
 	}
@@ -150,12 +151,12 @@ func (zlog *Zlog) getEncoder() zapcore.Encoder {
 }
 
 // getEncoderCore gets Encoder's zapcore.Core
-func (zlog *Zlog) getEncoderCore(fileName string, level zapcore.LevelEnabler) (core zapcore.Core) {
+func (zlog *_zap) getEncoderCore(fileName string, level zapcore.LevelEnabler) (core zapcore.Core) {
 	writer := GetWriteSyncer(fileName, *zlog.config.LogInConsole) // Use file-rotatelogs for log splitting
 	return zapcore.NewCore(zlog.getEncoder(), writer, level)
 }
 
 // Customize the log output time format
-func (zlog *Zlog) CustomTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
+func (zlog *_zap) CustomTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 	enc.AppendString(t.Format(zlog.config.Prefix + "2006/01/02 - 15:04:05.000"))
 }
