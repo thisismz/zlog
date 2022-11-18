@@ -76,7 +76,12 @@ func New(config ...Config) *_zap {
 	}
 	return zlog
 }
-func (zlog *_zap) Log() *zap.Logger {
+func Log() (logger *zap.Logger) {
+	z := Zlog
+	logger = z.log()
+	return logger
+}
+func (zlog *_zap) log() (logger *zap.Logger) {
 	if ok, _ := pathExists(zlog.config.Director); !ok { // Determine if there is a Director folder
 		fmt.Printf("create %v directory\n", zlog.config.Director)
 		_ = os.Mkdir(zlog.config.Director, os.ModePerm)
@@ -104,7 +109,7 @@ func (zlog *_zap) Log() *zap.Logger {
 		zlog.getEncoderCore(fmt.Sprintf("./%s/zlog_warn.log", zlog.config.Director), warnPriority),
 		zlog.getEncoderCore(fmt.Sprintf("./%s/zlog_error.log", zlog.config.Director), errorPriority),
 	}
-	logger := zap.New(zapcore.NewTee(cores[:]...), zap.AddCaller())
+	logger = zap.New(zapcore.NewTee(cores[:]...), zap.AddCaller())
 
 	if *zlog.config.ShowLine {
 		logger = logger.WithOptions(zap.AddCaller())
@@ -123,7 +128,7 @@ func (zlog *_zap) getEncoderConfig() (config zapcore.EncoderConfig) {
 		StacktraceKey:  zlog.config.StacktraceKey,
 		LineEnding:     zapcore.DefaultLineEnding,
 		EncodeLevel:    zapcore.LowercaseLevelEncoder,
-		EncodeTime:     zlog.CustomTimeEncoder,
+		EncodeTime:     zlog.customTimeEncoder,
 		EncodeDuration: zapcore.StringDurationEncoder,
 		EncodeCaller:   zapcore.FullCallerEncoder, // Print the file name and the line which the error occurred
 	}
@@ -157,6 +162,6 @@ func (zlog *_zap) getEncoderCore(fileName string, level zapcore.LevelEnabler) (c
 }
 
 // Customize the log output time format
-func (zlog *_zap) CustomTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
+func (zlog *_zap) customTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 	enc.AppendString(t.Format(zlog.config.Prefix + "2006/01/02 - 15:04:05.000"))
 }
