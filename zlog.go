@@ -122,7 +122,7 @@ func (zlog *Zlog) getEncoderConfig() (config zapcore.EncoderConfig) {
 		StacktraceKey:  zlog.config.StacktraceKey,
 		LineEnding:     zapcore.DefaultLineEnding,
 		EncodeLevel:    zapcore.LowercaseLevelEncoder,
-		EncodeTime:     zlog.CustomTimeEncoder,
+		EncodeTime:     zlog.customTimeEncoder,
 		EncodeDuration: zapcore.StringDurationEncoder,
 		EncodeCaller:   zapcore.FullCallerEncoder, // Print the file name and the line which the error occurred
 	}
@@ -156,6 +156,6 @@ func (zlog *Zlog) getEncoderCore(fileName string, level zapcore.LevelEnabler) (c
 }
 
 // Customize the log output time format
-func (zlog *Zlog) CustomTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
+func (zlog *Zlog) customTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 	enc.AppendString(t.Format(zlog.config.Prefix + "2006/01/02 - 15:04:05.000"))
 }
