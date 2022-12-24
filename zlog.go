@@ -27,9 +27,9 @@ type Config struct {
 
 // Default Config values
 const (
-	Level         = "info"
-	Format        = "console"
-	Prefix        = "[zlog]"
+	Level         = "debug"
+	Format        = "json"
+	Prefix        = "zlog"
 	Director      = "log"
 	EncodeLevel   = "CapitalLevelEncoder"
 	StacktraceKey = "stacktrace"
@@ -122,7 +122,7 @@ func (zlog *Zlog) getEncoderConfig() (config zapcore.EncoderConfig) {
 		StacktraceKey:  zlog.config.StacktraceKey,
 		LineEnding:     zapcore.DefaultLineEnding,
 		EncodeLevel:    zapcore.LowercaseLevelEncoder,
-		EncodeTime:     zlog.customTimeEncoder,
+		//EncodeTime:     zlog.customTimeEncoder,
 		EncodeDuration: zapcore.StringDurationEncoder,
 		EncodeCaller:   zapcore.FullCallerEncoder, // Print the file name and the line which the error occurred
 	}
@@ -156,6 +156,6 @@ func (zlog *Zlog) getEncoderCore(fileName string, level zapcore.LevelEnabler) (c
 }
 
 // Customize the log output time format
-func (zlog *Zlog) customTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
-	enc.AppendString(t.Format("2020-06-06T22:51:30+05:30"))
-}
+// func (zlog *Zlog) customTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
+// 	enc.AppendString(t.Format("2020-06-06T22:51:30+05:30"))
+// }
