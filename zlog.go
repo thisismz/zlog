@@ -157,5 +157,5 @@ func (zlog *Zlog) getEncoderCore(fileName string, level zapcore.LevelEnabler) (c
 
 // Customize the log output time format
 func (zlog *Zlog) customTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
-	enc.AppendString(t.Format(zlog.config.Prefix + "2006/01/02 - 15:04:05.000"))
+	enc.AppendString(t.Format("2006/01/02 - 15:04:05.000"))
 }
