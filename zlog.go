@@ -1,26 +1,42 @@
 package zlog
 
 import (
-	"observ/zlog/config"
 	"observ/zlog/core"
 	"observ/zlog/global"
 
 	"go.uber.org/zap"
 )
 
+type zlog struct {
+}
 
-var Config = config.Zap{}
-
-type zlog struct{}
+type Config struct {
+	Level         string
+	Prefix        string
+	Format        string
+	Director      string
+	EncodeLevel   string
+	StacktraceKey string
+	MaxAge        int
+	ShowLine      bool
+	LogInConsole  bool
+}
 
 func (z *zlog) Log() *zap.Logger {
-	// Set default values
 	return core.Zap()
 }
 
-func New(config ...config.Zap) *zlog {
+func New(config ...Config) *zlog {
 	if len(config) > 0 {
-		global.CONFIG = config[0]
+		global.CONFIG.Director = config[0].Director
+		global.CONFIG.EncodeLevel = config[0].EncodeLevel
+		global.CONFIG.Format = config[0].Format
+		global.CONFIG.Level = config[0].Level
+		global.CONFIG.LogInConsole = config[0].LogInConsole
+		global.CONFIG.MaxAge = config[0].MaxAge
+		global.CONFIG.Prefix = config[0].Prefix
+		global.CONFIG.ShowLine = config[0].ShowLine
+		global.CONFIG.StacktraceKey = config[0].StacktraceKey
 	}
 	if global.CONFIG.Level == "" {
 		global.CONFIG.Level = "debug"
