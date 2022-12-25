@@ -4,7 +4,7 @@ The logs can be saved to the related files inside the log files. It can be done 
 
 ### Installing
 
- `go get -u github.com/thisismz/zlog`
+ `go get -u github.com/thisismz/zlog@latest`
 
 ##  ⚡️ Quickstart
 
@@ -15,11 +15,22 @@ package main
  
 import  "github.com/thisismz/zlog"
 
-func  main() {
-	z := zlog.New()
-	z.Log().Info("Hello World")
+func main() {
+	var config = zlog.Config{
+		Level:         "debug",
+		Prefix:        "zlog",
+		Format:        "json",
+		Director:      "log",
+		EncodeLevel:   "CapitalLevelEncoder",
+		StacktraceKey: "stacktrace",
+		MaxAge:        7,
+		ShowLine:      true,
+		LogInConsole:  true,
+	}
+	z := zlog.New(config).Log()
+	z.Info("Hello World")
 	err := errors.New("this is your error")
-	z.Log().Error("Error", zap.Error(err))
+	z.Error("Error", zap.Error(err))
 }
 
 ```
@@ -27,12 +38,15 @@ func  main() {
 
 ```go
 
-var ConfigDefault = Config{
-	Level =  "info"
-	Format =  "console"
-	Prefix =  "[zlog]"
-	Director =  "log"
-	EncodeLevel =  "CapitalLevelEncoder"
-	StacktraceKey =  "stacktrace"
-)
+	var config = zlog.Config{
+		Level:         "debug",
+		Prefix:        "zlog",
+		Format:        "json",
+		Director:      "log",
+		EncodeLevel:   "CapitalLevelEncoder",
+		StacktraceKey: "stacktrace",
+		MaxAge:        7,
+		ShowLine:      true,
+		LogInConsole:  true,
+	}
 ```
