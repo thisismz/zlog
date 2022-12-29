@@ -1,8 +1,8 @@
 package zlog
 
 import (
-	"observ/zlog/core"
-	"observ/zlog/global"
+	"github.com/thisismz/zlog/core"
+	"github.com/thisismz/zlog/global"
 
 	"go.uber.org/zap"
 )

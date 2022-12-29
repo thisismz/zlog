@@ -2,9 +2,10 @@ package core
 
 import (
 	"fmt"
-	"observ/zlog/global"
-	"observ/zlog/internal"
 	"os"
+
+	"github.com/thisismz/zlog/global"
+	"github.com/thisismz/zlog/internal"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"

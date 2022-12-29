@@ -1,7 +1,7 @@
 package global
 
 import (
-	"observ/zlog/config"
+	"github.com/thisismz/zlog/config"
 )
 
 var (

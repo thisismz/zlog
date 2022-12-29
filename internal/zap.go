@@ -2,7 +2,7 @@ package internal
 
 import (
 	"fmt"
-	"observ/zlog/global"
+	"github.com/thisismz/zlog/global"
 
 	"time"
 

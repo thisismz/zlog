@@ -1,7 +1,7 @@
 package internal
 
 import (
-	"observ/zlog/global"
+	"github.com/thisismz/zlog/global"
 	"os"
 	"path"
 	"time"
