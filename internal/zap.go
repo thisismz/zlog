@@ -2,6 +2,8 @@ package internal
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/thisismz/zlog/global"
 
 	"time"
@@ -38,12 +40,15 @@ func (z *_zap) GetEncoderConfig() zapcore.EncoderConfig {
 }
 
 func (z *_zap) GetEncoderCore(l zapcore.Level, level zap.LevelEnablerFunc) zapcore.Core {
-	writer, err := FileRotatelogs.GetWriteSyncer(l.String())
-	if err != nil {
-		fmt.Printf("Get Write Syncer Failed err:%v", err.Error())
-		return nil
+	if global.CONFIG.SaveInFile == true {
+		writer, err := FileRotatelogs.GetWriteSyncer(l.String())
+		if err != nil {
+			fmt.Printf("Get Write Syncer Failed err:%v", err.Error())
+			return nil
+		}
+		return zapcore.NewCore(z.GetEncoder(), writer, level)
 	}
-
+	writer := zapcore.AddSync(os.Stdout)
 	return zapcore.NewCore(z.GetEncoder(), writer, level)
 }
 

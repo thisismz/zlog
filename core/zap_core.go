@@ -12,11 +12,12 @@ import (
 )
 
 func Zap() (logger *zap.Logger) {
-	if ok, _ := internal.PathExists(global.CONFIG.Director); !ok {
-		fmt.Printf("create %v directory\n", global.CONFIG.Director)
-		_ = os.Mkdir(global.CONFIG.Director, os.ModePerm)
+	if global.CONFIG.SaveInFile == true {
+		if ok, _ := internal.PathExists(global.CONFIG.Director); !ok {
+			fmt.Printf("create %v directory\n", global.CONFIG.Director)
+			_ = os.Mkdir(global.CONFIG.Director, os.ModePerm)
+		}
 	}
-
 	cores := internal.Zap.GetZapCores()
 	logger = zap.New(zapcore.NewTee(cores...))
 

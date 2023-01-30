@@ -16,6 +16,7 @@ type Zap struct {
 	MaxAge        int
 	ShowLine      bool
 	LogInConsole  bool
+	SaveInFile bool
 }
 
 func (z *Zap) ZapEncodeLevel() zapcore.LevelEncoder {

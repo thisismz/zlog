@@ -20,6 +20,7 @@ type Config struct {
 	MaxAge        int
 	ShowLine      bool
 	LogInConsole  bool
+	SaveInFile    bool
 }
 
 func (z *zlog) Log() *zap.Logger {
@@ -37,6 +38,7 @@ func New(config ...Config) *zlog {
 		global.CONFIG.Prefix = config[0].Prefix
 		global.CONFIG.ShowLine = config[0].ShowLine
 		global.CONFIG.StacktraceKey = config[0].StacktraceKey
+		global.CONFIG.SaveInFile = config[0].SaveInFile
 	}
 	if global.CONFIG.Level == "" {
 		global.CONFIG.Level = "debug"
@@ -59,11 +61,14 @@ func New(config ...Config) *zlog {
 	if global.CONFIG.MaxAge == 0 {
 		global.CONFIG.MaxAge = 7
 	}
-	if global.CONFIG.ShowLine == true {
+	if global.CONFIG.ShowLine {
 		global.CONFIG.ShowLine = true
 	}
-	if global.CONFIG.LogInConsole == true {
+	if global.CONFIG.LogInConsole {
 		global.CONFIG.LogInConsole = true
+	}
+	if global.CONFIG.SaveInFile {
+		global.CONFIG.SaveInFile = true
 	}
 	return &zlog{}
 }

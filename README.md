@@ -6,7 +6,7 @@ The logs can be saved to the related files inside the log files. It can be done 
 
  `go get -u github.com/thisismz/zlog@latest`
 
-##  ⚡️ Quickstart
+## ⚡️ Quickstart
 
 ```go
 
@@ -26,6 +26,7 @@ func main() {
 		MaxAge:        7,
 		ShowLine:      true,
 		LogInConsole:  true,
+		SaveInfile: false,
 	}
 	z := zlog.New(config).Log()
 	z.Info("Hello World")
@@ -34,7 +35,8 @@ func main() {
 }
 
 ```
-###  Default Config
+
+### Default Config
 
 ```go
 
