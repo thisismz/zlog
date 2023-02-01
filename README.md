@@ -24,9 +24,9 @@ func main() {
 		EncodeLevel:   "CapitalLevelEncoder",
 		StacktraceKey: "stacktrace",
 		MaxAge:        7,
-		ShowLine:      true,
-		LogInConsole:  true,
-		SaveInfile: false,
+		ShowLine:      "true",
+		LogInConsole:  "true",
+		SaveInfile: "false",
 	}
 	z := zlog.New(config).Log()
 	z.Info("Hello World")
