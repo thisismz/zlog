@@ -18,9 +18,9 @@ type Config struct {
 	EncodeLevel   string
 	StacktraceKey string
 	MaxAge        int
-	ShowLine      bool
-	LogInConsole  bool
-	SaveInFile    bool
+	ShowLine      string
+	LogInConsole  string
+	SaveInFile    string
 }
 
 func (z *zlog) Log() *zap.Logger {
@@ -33,12 +33,24 @@ func New(config ...Config) *zlog {
 		global.CONFIG.EncodeLevel = config[0].EncodeLevel
 		global.CONFIG.Format = config[0].Format
 		global.CONFIG.Level = config[0].Level
-		global.CONFIG.LogInConsole = config[0].LogInConsole
 		global.CONFIG.MaxAge = config[0].MaxAge
 		global.CONFIG.Prefix = config[0].Prefix
-		global.CONFIG.ShowLine = config[0].ShowLine
 		global.CONFIG.StacktraceKey = config[0].StacktraceKey
-		global.CONFIG.SaveInFile = config[0].SaveInFile
+		if config[0].LogInConsole == "true" {
+			global.CONFIG.LogInConsole = true
+		} else {
+			global.CONFIG.LogInConsole = false
+		}
+		if config[0].ShowLine == "true" {
+			global.CONFIG.ShowLine = true
+		} else {
+			global.CONFIG.ShowLine = false
+		}
+		if config[0].SaveInFile == "true" {
+			global.CONFIG.SaveInFile = true
+		} else {
+			global.CONFIG.SaveInFile = false
+		}
 	}
 	if global.CONFIG.Level == "" {
 		global.CONFIG.Level = "debug"
