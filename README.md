@@ -43,17 +43,21 @@ func main() {
 		// Handle the error here
 		panic(err)
 	}
+	
 	// Flush buffered events before the program terminates.
 	// Set the timeout to the maximum duration the program can afford to wait.
 	defer sentryClient.Flush(2 * time.Second)
 	// Create a New zap logger
 	zapLog := zlog.New(config).Log()
+
 	// Modify zap logger to sentry logger
 	z := modifyToSentryLogger(zapLog, sentryClient)
+
 	z.Info("Hello World")
 	err = errors.New("this is new error")
 	z.Error("Error", zap.Error(err))
 }
+
 func modifyToSentryLogger(log *zap.Logger, client *sentry.Client) *zap.Logger {
 	cfg := zapsentry.Configuration{
 		Level:             zapcore.ErrorLevel, //when to send message to sentry

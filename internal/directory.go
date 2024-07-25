@@ -2,10 +2,8 @@ package internal
 
 import (
 	"errors"
+	"fmt"
 	"os"
-
-	"github.com/labstack/gommon/log"
-	"go.uber.org/zap"
 )
 
 func PathExists(path string) (bool, error) {
@@ -29,9 +27,9 @@ func CreateDir(dirs ...string) (err error) {
 			return err
 		}
 		if !exist {
-			log.Debug("create directory" + v)
+			fmt.Printf("create directory: %s\n", v)
 			if err := os.MkdirAll(v, os.ModePerm); err != nil {
-				log.Error("create directory"+v, zap.Any(" error:", err))
+				fmt.Printf("create directory error: %v\n", err)
 				return err
 			}
 		}

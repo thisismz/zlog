@@ -1,9 +1,8 @@
 package zlog
 
 import (
+	"github.com/thisismz/zlog/configure"
 	"github.com/thisismz/zlog/core"
-	"github.com/thisismz/zlog/global"
-
 	"go.uber.org/zap"
 )
 
@@ -29,58 +28,58 @@ func (z *zlog) Log() *zap.Logger {
 
 func New(config ...Config) *zlog {
 	if len(config) > 0 {
-		global.CONFIG.Director = config[0].Director
-		global.CONFIG.EncodeLevel = config[0].EncodeLevel
-		global.CONFIG.Format = config[0].Format
-		global.CONFIG.Level = config[0].Level
-		global.CONFIG.MaxAge = config[0].MaxAge
-		global.CONFIG.Prefix = config[0].Prefix
-		global.CONFIG.StacktraceKey = config[0].StacktraceKey
+		configure.CONF.Director = config[0].Director
+		configure.CONF.EncodeLevel = config[0].EncodeLevel
+		configure.CONF.Format = config[0].Format
+		configure.CONF.Level = config[0].Level
+		configure.CONF.MaxAge = config[0].MaxAge
+		configure.CONF.Prefix = config[0].Prefix
+		configure.CONF.StacktraceKey = config[0].StacktraceKey
 		if config[0].LogInConsole == "true" {
-			global.CONFIG.LogInConsole = true
+			configure.CONF.LogInConsole = true
 		} else {
-			global.CONFIG.LogInConsole = false
+			configure.CONF.LogInConsole = false
 		}
 		if config[0].ShowLine == "true" {
-			global.CONFIG.ShowLine = true
+			configure.CONF.ShowLine = true
 		} else {
-			global.CONFIG.ShowLine = false
+			configure.CONF.ShowLine = false
 		}
 		if config[0].SaveInFile == "true" {
-			global.CONFIG.SaveInFile = true
+			configure.CONF.SaveInFile = true
 		} else {
-			global.CONFIG.SaveInFile = false
+			configure.CONF.SaveInFile = false
 		}
 	}
-	if global.CONFIG.Level == "" {
-		global.CONFIG.Level = "debug"
+	if configure.CONF.Level == "" {
+		configure.CONF.Level = "debug"
 	}
-	if global.CONFIG.Prefix == "" {
-		global.CONFIG.Prefix = "zlog"
+	if configure.CONF.Prefix == "" {
+		configure.CONF.Prefix = "zlog"
 	}
-	if global.CONFIG.Format == "" {
-		global.CONFIG.Format = "json"
+	if configure.CONF.Format == "" {
+		configure.CONF.Format = "json"
 	}
-	if global.CONFIG.Director == "" {
-		global.CONFIG.Director = "logs"
+	if configure.CONF.Director == "" {
+		configure.CONF.Director = "logs"
 	}
-	if global.CONFIG.EncodeLevel == "" {
-		global.CONFIG.EncodeLevel = "LowercaseLevelEncoder"
+	if configure.CONF.EncodeLevel == "" {
+		configure.CONF.EncodeLevel = "LowercaseLevelEncoder"
 	}
-	if global.CONFIG.StacktraceKey == "" {
-		global.CONFIG.StacktraceKey = "stacktrace"
+	if configure.CONF.StacktraceKey == "" {
+		configure.CONF.StacktraceKey = "stacktrace"
 	}
-	if global.CONFIG.MaxAge == 0 {
-		global.CONFIG.MaxAge = 7
+	if configure.CONF.MaxAge == 0 {
+		configure.CONF.MaxAge = 7
 	}
-	if global.CONFIG.ShowLine {
-		global.CONFIG.ShowLine = true
+	if configure.CONF.ShowLine {
+		configure.CONF.ShowLine = true
 	}
-	if global.CONFIG.LogInConsole {
-		global.CONFIG.LogInConsole = true
+	if configure.CONF.LogInConsole {
+		configure.CONF.LogInConsole = true
 	}
-	if global.CONFIG.SaveInFile {
-		global.CONFIG.SaveInFile = true
+	if configure.CONF.SaveInFile {
+		configure.CONF.SaveInFile = true
 	}
 	return &zlog{}
 }

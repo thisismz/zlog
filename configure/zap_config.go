@@ -1,4 +1,4 @@
-package config
+package configure
 
 import (
 	"strings"
@@ -6,7 +6,7 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-type Zap struct {
+type zapConfig struct {
 	Level         string
 	Prefix        string
 	Format        string
@@ -16,10 +16,10 @@ type Zap struct {
 	MaxAge        int
 	ShowLine      bool
 	LogInConsole  bool
-	SaveInFile bool
+	SaveInFile    bool
 }
 
-func (z *Zap) ZapEncodeLevel() zapcore.LevelEncoder {
+func (z *zapConfig) ZapEncodeLevel() zapcore.LevelEncoder {
 	switch {
 	case z.EncodeLevel == "LowercaseLevelEncoder":
 		return zapcore.LowercaseLevelEncoder
@@ -34,7 +34,7 @@ func (z *Zap) ZapEncodeLevel() zapcore.LevelEncoder {
 	}
 }
 
-func (z *Zap) TransportLevel() zapcore.Level {
+func (z *zapConfig) TransportLevel() zapcore.Level {
 	z.Level = strings.ToLower(z.Level)
 	switch z.Level {
 	case "debug":

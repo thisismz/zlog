@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/thisismz/zlog/global"
+	"github.com/thisismz/zlog/configure"
 	"github.com/thisismz/zlog/internal"
 
 	"go.uber.org/zap"
@@ -12,16 +12,16 @@ import (
 )
 
 func Zap() (logger *zap.Logger) {
-	if global.CONFIG.SaveInFile == true {
-		if ok, _ := internal.PathExists(global.CONFIG.Director); !ok {
-			fmt.Printf("create %v directory\n", global.CONFIG.Director)
-			_ = os.Mkdir(global.CONFIG.Director, os.ModePerm)
+	if configure.CONF.SaveInFile == true {
+		if ok, _ := internal.PathExists(configure.CONF.Director); !ok {
+			fmt.Printf("create %v directory\n", configure.CONF.Director)
+			_ = os.Mkdir(configure.CONF.Director, os.ModePerm)
 		}
 	}
 	cores := internal.Zap.GetZapCores()
 	logger = zap.New(zapcore.NewTee(cores...))
 
-	if global.CONFIG.ShowLine {
+	if configure.CONF.ShowLine {
 		logger = logger.WithOptions(zap.AddCaller())
 	}
 	return logger
