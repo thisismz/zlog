@@ -35,8 +35,11 @@ func (z *zapCore) WriteSyncer(formats ...string) zapcore.WriteSyncer {
 	if LogInConsole {
 		multiSyncer := zapcore.NewMultiWriteSyncer(os.Stdout)
 		return zapcore.AddSync(multiSyncer)
-	} else if SaveInFile {
+	} else if Director != "" {
 		return zapcore.AddSync(cutter)
+	} else if LogInConsole && Director != "" {
+		multiSyncer := zapcore.NewMultiWriteSyncer(os.Stdout, cutter)
+		return zapcore.AddSync(multiSyncer)
 	}
 	// temp io.Writer Discard for calls succeed without doing anything
 	return zapcore.AddSync(io.Discard)

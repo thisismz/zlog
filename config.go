@@ -6,6 +6,19 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
+var (
+	Level         = "debug"
+	Prefix        = "mobinio"
+	Format        = "console"
+	Director      = ""
+	EncodeLevel   = "uppercase"
+	StacktraceKey = "trace"
+	ShowLine      = false
+	LogInConsole  = true
+	RetentionDay  = 30
+	SentryDns     = ""
+)
+
 func levels() []zapcore.Level {
 	levels := make([]zapcore.Level, 0, 7)
 	level, err := zapcore.ParseLevel(Level)
@@ -30,7 +43,7 @@ func encoder() zapcore.Encoder {
 		EncodeTime: func(t time.Time, encoder zapcore.PrimitiveArrayEncoder) {
 			encoder.AppendString(Prefix + t.Format("2006-01-02 15:04:05.000"))
 		},
-		EncodeLevel:    levelEncoder(),
+		EncodeLevel:    LevelEncoder(),
 		EncodeCaller:   zapcore.FullCallerEncoder,
 		EncodeDuration: zapcore.SecondsDurationEncoder,
 	}
@@ -41,7 +54,7 @@ func encoder() zapcore.Encoder {
 
 }
 
-func levelEncoder() zapcore.LevelEncoder {
+func LevelEncoder() zapcore.LevelEncoder {
 	switch {
 	case EncodeLevel == "LowercaseLevelEncoder":
 		return zapcore.LowercaseLevelEncoder
